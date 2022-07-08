@@ -1,9 +1,9 @@
-import { ____ } from './InteraccionesEthers'
+import { ________ } from './InteraccionesEthers'
 
 (async () => { 
     try {
         
-        // DECLARA TODAS LAS INTERACCIONES
+        // DECLARACIÓN DE TODAS LAS INTERACCIONES CON EL CONTRATO
 
     } catch (e) {
         console.log(`Error: ${e.message}`)
