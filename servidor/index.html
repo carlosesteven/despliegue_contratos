@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pueba HTML Contratos</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+    
+    <script src="./node_modules/web3/dist/web3.min.js">
+    </script>
+</head>
+<body>
+    <div class="container">
+
+        <h1>Información Contrato</h1>
+
+        <h2 id="info"></h2>
+
+        <label for="name" class="col-lg-2 control-label">Nombre</label>
+        <input id="name" type="text">
+
+        <label for="name" class="col-lg-2 control-label">Edad</label>
+        <input id="age" type="text">
+
+        <!--
+        <button id="button">Update Info</button>
+        -->
+      
+        <button class="enableEthereumButton">Activar Ethereum</button>
+        <h2>Cuenta: <span class="showAccount"></span></h2>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+      if (typeof window.ethereum !== 'undefined') {
+          console.log('MetaMask SI esta instalado.');
+        }else{
+          console.log('MetaMask NO esta instalado.');
+        }
+
+        const ethereumButton = document.querySelector('.enableEthereumButton');
+        const showAccount = document.querySelector('.showAccount');
+        
+        ethereumButton.addEventListener('click', () => {
+          getAccount();
+        });
+        
+        async function getAccount() 
+        {
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            showAccount.innerHTML = account;
+  
+            var web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/0406345c1b6c413fba9f0204c8f3dd74"));
+  
+            web3.eth.defaultAccount = account;
+  
+            var abi = [
+    	{
+    		"inputs": [
+    			{
+    				"internalType": "string",
+    				"name": "_fName",
+    				"type": "string"
+    			},
+    			{
+    				"internalType": "uint256",
+    				"name": "_age",
+    				"type": "uint256"
+    			}
+    		],
+    		"name": "setInfo",
+    		"outputs": [],
+    		"stateMutability": "nonpayable",
+    		"type": "function"
+    	},
+    	{
+    		"inputs": [],
+    		"name": "getInfo",
+    		"outputs": [
+    			{
+    				"internalType": "string",
+    				"name": "",
+    				"type": "string"
+    			},
+    			{
+    				"internalType": "uint256",
+    				"name": "",
+    				"type": "uint256"
+    			}
+    		],
+    		"stateMutability": "view",
+    		"type": "function"
+    	}
+    ];
+            var direccion = "0x0205d2F6e880d0Edd064e28EABE67ca0DC5370A9";
+            
+            var contrato = new web3.eth.Contract(abi, direccion);
+  
+            const datosUsuario = await contrato.methods.getInfo().call();
+  
+            $("#info").html(datosUsuario[0]+' ('+datosUsuario[1]+' años)');
+  
+            console.log( "Datos del usuario actual: ", datosUsuario );
+        }        
+
+    </script>
+
+</body>
+</html>
